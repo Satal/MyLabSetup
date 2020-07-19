@@ -1,0 +1,58 @@
+version: '3' 
+services: 
+  jira:
+    container_name: jira 
+    image: atlassian/jira-software:latest 
+    restart: always
+    environment:
+     - ATL_PROXY_NAME=jira.internal
+     - ATL_PROXY_PORT=80
+     - ATL_TOMCAT_SCHEME=http 
+
+  jiraservicedesk:
+    container_name: jiraservicedesk 
+    image: atlassian/jira-servicedesk:latest 
+    restart: always
+    environment:
+     - ATL_PROXY_NAME=jiraservicedesk.internal
+     - ATL_PROXY_PORT=80
+     - ATL_TOMCAT_SCHEME=http 
+
+  confluence: 
+    container_name: confluence
+    image: atlassian/confluence-server:latest
+    restart: always
+    environment: 
+     - ATL_PROXY_NAME=confluence.internal
+     - ATL_PROXY_PORT=80
+     - ATL_TOMCAT_SCHEME=http
+
+  bitbucket: 
+    container_name: bitbucket 
+    image: atlassian/bitbucket-server:latest 
+    restart: always
+    environment: 
+     - SERVER_PROXY_NAME=bitbucket.internal
+     - SERVER_PROXY_PORT=80
+     - SERVER_SCHEME=http 
+
+  nginx: 
+    container_name: nginx 
+    image: nginx:latest 
+    restart: always
+    volumes:
+     - ./nginx.conf:/etc/nginx/nginx.conf 
+    depends_on: 
+     - jira 
+     - confluence 
+     - bitbucket 
+     - jiraservicedesk
+    ports: 
+     - "80:80" 
+    networks: 
+      default: 
+        aliases:
+         - jira.internal
+         - confluence.internal
+         - bitbucket.internal 
+         - jiraservicedesk.internal
