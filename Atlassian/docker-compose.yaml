@@ -1,67 +1,58 @@
 version: '3' 
-services: 
-  mssqlserver:
-    container_name: mssqlserver
-    image: mcr.microsoft.com/mssql/server:latest
-    restart: always
-    environment:
-      MSQL_PID=Express
-      SA_Password=yourStrong(!)Password
-      ACCEPT_EULA=Y
 
+services: 
+  database:
+    container_name: postgres
+    image: postgres
+    env_file:
+      - postgres.env
+    volumes:
+    - database-data:/var/lib/postgresql/data
+  
   jira:
     container_name: jira 
     image: atlassian/jira-software:latest 
     restart: always
+    ports:
+      - "8080:8080"
     environment:
-     - ATL_PROXY_NAME=jira.internal
-     - ATL_PROXY_PORT=80
      - ATL_TOMCAT_SCHEME=http 
+     - JVM_MINIMUM_MEMORY=2048m
+     - JVM_MAXIMUM_MEMORY=8192m
+
 
   jiraservicedesk:
     container_name: jiraservicedesk 
     image: atlassian/jira-servicedesk:latest 
     restart: always
+    ports:
+      - "8081:8081"
     environment:
-     - ATL_PROXY_NAME=jiraservicedesk.internal
-     - ATL_PROXY_PORT=80
      - ATL_TOMCAT_SCHEME=http 
+     - JVM_MINIMUM_MEMORY=2048m
+     - JVM_MAXIMUM_MEMORY=8192m
 
   confluence: 
     container_name: confluence
     image: atlassian/confluence-server:latest
     restart: always
+    ports:
+      - "8090:8090"
     environment: 
-     - ATL_PROXY_NAME=confluence.internal
-     - ATL_PROXY_PORT=80
      - ATL_TOMCAT_SCHEME=http
+     - JVM_MINIMUM_MEMORY=2048m
+     - JVM_MAXIMUM_MEMORY=8192m
 
   bitbucket: 
     container_name: bitbucket 
     image: atlassian/bitbucket-server:latest 
     restart: always
-    environment: 
-     - SERVER_PROXY_NAME=bitbucket.internal
-     - SERVER_PROXY_PORT=80
+    ports:
+      - "7990:7990"
+    environment:
+     - JVM_MINIMUM_MEMORY=2048m
+     - JVM_MAXIMUM_MEMORY=8192m
      - SERVER_SCHEME=http 
 
-  nginx: 
-    container_name: nginx 
-    image: nginx:latest 
-    restart: always
-    volumes:
-     - ./nginx.conf:/etc/nginx/nginx.conf 
-    depends_on: 
-     - jira 
-     - confluence 
-     - bitbucket 
-     - jiraservicedesk
-    ports: 
-     - "80:80" 
-    networks: 
-      default: 
-        aliases:
-         - jira.internal
-         - confluence.internal
-         - bitbucket.internal 
-         - jiraservicedesk.internal
+volumes:
+  database-data:
