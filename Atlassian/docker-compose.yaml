@@ -1,5 +1,14 @@
 version: '3' 
 services: 
+  mssqlserver:
+    container_name: mssqlserver
+    image: mcr.microsoft.com/mssql/server:latest
+    restart: always
+    environment:
+      MSQL_PID=Express
+      SA_Password=yourStrong(!)Password
+      ACCEPT_EULA=Y
+
   jira:
     container_name: jira 
     image: atlassian/jira-software:latest 
