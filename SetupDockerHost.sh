@@ -1,5 +1,5 @@
 # Remove PodMan
-yum remove buildah skopeo podman containers-common atomic-registries docker
+yum remove buildah skopeo podman containers-common atomic-registries docker -y
 
 # Add docker repo
 dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
@@ -18,3 +18,7 @@ chmod +x /usr/local/bin/docker-compose
 
 # Link docker-compose to bin so it can be used from anywhere
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+
+# Configure firewall
+firewall-cmd --permanent --zone=trusted --change-interface=docker0
+firewall-cmd --reload
