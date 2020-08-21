@@ -1,7 +1,8 @@
 
 # Setup and enable nginx
 dnf -y install @nginx -y
-sudo systemctl enable --now nginx
+systemctl start nginx
+systemctl enable nginx
 
 # Allow HTTP
 sudo firewall-cmd --add-service=http --permanent
@@ -28,3 +29,29 @@ EOF
 
 # Make the file executable
 chmod +x /etc/centos8_reposync.sh
+
+# Run the script for the first time. This will take some time.
+/etc/centos8_reposync.sh
+
+
+
+# Configure nginx
+cat << EOF >> /etc/nginx/conf.d/centos.conf
+server {
+	listen 80;
+	server_name localhost;
+        root /data/repos/;
+
+       location / {
+                autoindex on;
+        }
+}
+EOF
+
+# Set SELinux rules
+sudo semanage fcontext -a -t httpd_sys_content_t "/data/repos(/.*)?"
+sudo restorecon -Rv /data/repos
+
+# Refresh and restart nginx
+sudo nginx -t
+sudo systemctl restart nginx
