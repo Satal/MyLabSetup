@@ -1,6 +1,6 @@
 
 # Setup and enable nginx
-dnf -y install @nginx -y
+dnf -y install @nginx yum-utils -y
 systemctl start nginx
 systemctl enable nginx
 
@@ -11,28 +11,27 @@ sudo firewall-cmd --reload
 # We need to make sure we create a new drive/mount point at this point to create /data
 
 # Create the repo folder in /data
-mkdir -p /data/repos/centos/8/
+mkdir -p /data/repos/
+
+# Mount VMware share if you have it
+# mount -t fuse.vmhgfs-fuse -o allow_other .host:/CentOSRepo /data/repos
 
 # Write out the repo sync file
-cat << EOF >> /etc/centos8_reposync.sh
+cat << EOF >> /etc/cron.daily/update-repo
 #!/bin/bash
-repos_base_dir="/data/repos/centos/8/"
 
-# Start sync if base repo directory exist
-if [[ -d "$repos_base_dir" ]] ; then
-  # Start Sync
-  rsync  -avSHP --delete rsync://mirror.liquidtelecom.com/centos/8/  "$repos_base_dir"
+VER='8'
+ARCH='x86_64'
+REPOS=(BaseOS AppStream extras)
 
-# Download CentOS 8 repository key
-wget -P $repos_base_dir wget https://www.centos.org/keys/RPM-GPG-KEY-CentOS-Official
+for REPO in ${REPOS[@]}
+do
+    reposync -p /var/www/repos/centos/${VER}/${ARCH}/os/ --repo=${REPO} --download-metadata --newest-only
+done
 EOF
 
 # Make the file executable
-chmod +x /etc/centos8_reposync.sh
-
-# Run the script for the first time. This will take some time.
-/etc/centos8_reposync.sh
-
+chmod 755 /etc/cron.daily/update-repo
 
 
 # Configure nginx
@@ -55,3 +54,8 @@ sudo restorecon -Rv /data/repos
 # Refresh and restart nginx
 sudo nginx -t
 sudo systemctl restart nginx
+
+# Perform rsync
+reposync -p /data/repos/centos/8/x86_64/os/ --repo=BaseOS --download-metadata
+reposync -p /data/repos/centos/8/x86_64/os/ --repo=AppStream --download-metadata
+reposync -p /data/repos/centos/8/x86_64/os/ --repo=extras --download-metadata
