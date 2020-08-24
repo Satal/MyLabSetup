@@ -26,7 +26,7 @@ REPOS=(BaseOS AppStream extras)
 
 for REPO in ${REPOS[@]}
 do
-    reposync -p /var/www/repos/centos/${VER}/${ARCH}/os/ --repo=${REPO} --download-metadata --newest-only
+    reposync -p /data/repos/centos/${VER}/${ARCH}/os/ --repo=${REPO} --download-metadata --newest-only
 done
 EOF
 
@@ -56,6 +56,6 @@ sudo nginx -t
 sudo systemctl restart nginx
 
 # Perform rsync
-reposync -p /data/repos/centos/8/x86_64/os/ --repo=BaseOS --download-metadata
-reposync -p /data/repos/centos/8/x86_64/os/ --repo=AppStream --download-metadata
-reposync -p /data/repos/centos/8/x86_64/os/ --repo=extras --download-metadata
+reposync -p /data/repos/centos/8/x86_64/os/ --repo=BaseOS --download-metadata --newest-only
+reposync -p /data/repos/centos/8/x86_64/os/ --repo=AppStream --download-metadata --newest-only
+reposync -p /data/repos/centos/8/x86_64/os/ --repo=extras --download-metadata --newest-only
