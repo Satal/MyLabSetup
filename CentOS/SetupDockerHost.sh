@@ -21,4 +21,9 @@ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 # Configure firewall
 firewall-cmd --permanent --zone=trusted --change-interface=docker0
+firewall-cmd --add-masquerade --permanent
 firewall-cmd --reload
+
+# Add "admin" user to the Docker group so they don't need to sudo for all docker commands
+# if this needs to be something other than the "admin" user then change the script accordingly
+usermod -aG Docker admin
