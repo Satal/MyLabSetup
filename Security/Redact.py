@@ -10,10 +10,9 @@ IPADDR_REGEX = r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b"
 #https://stackabuse.com/command-line-arguments-in-python/
 parser = argparse.ArgumentParser()
 parser.add_argument("--version", "-v", help="Show program version", action="store_true")
-parser.add_argument("--file", "-f", help="Run against a single file", action="store_true")
-parser.add_argument("--dir", "-d", help="Run against a whole directory", action="store_true")
-parser.add_argument("--help", "-h", help="Show this help", action="store_true")
-parser.add_argument("--out", "-o", help="Output redactions to file", action="store_true")
+parser.add_argument("--file", "-f", help="Run against a single file", action="store")
+parser.add_argument("--dir", "-d", help="Run against a whole directory", action="store")
+parser.add_argument("--out", "-o", help="Output redactions to file", action="store")
 
 args = parser.parse_args()
 
