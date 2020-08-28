@@ -51,14 +51,14 @@ if args.file:
         print("The specified file doesn't exist")
         sys.exit
     print("This is myprogram version 0.1" + args.file)
-    redactionDict = replaceAllIPAddr(args.file, redactionDict)
+    redactionDict = redactFile(args.file, redactionDict)
 
 if args.dir:
     # The user is looking to run Redact.py against a whole directory
     if not os.path.isdir(args.dir):
         print("The specified directory doesn't exist")
         sys.exit
-    redactionDict = replaceAllIPAddrInDir(args.dir, redactionDict)
+    redactionDict = redactFilesInDir(args.dir, redactionDict)
 
 # Now we've run redact, save the output file if requested.
 if args.out:
@@ -67,7 +67,7 @@ if args.out:
         for key in redactionDict.keys():
             f.write("%s,%s\n"%(key,redactionDict[key]))
 
-def replaceAllIPAddr(fileLocation, ipAddrDict):
+def redactFile(fileLocation, ipAddrDict):
     # Read in the content of the file
     with open(fileLocation, 'r') as file :
         inputString = file.read()
@@ -86,12 +86,9 @@ def replaceAllIPAddr(fileLocation, ipAddrDict):
 
     return ipAddrDict
 
-def replaceAllIPAddrInDir(dirName, ipAddrDict):
+def redactFilesInDir(dirName, ipAddrDict):
     # Use os.walk to yield a collection of directories and files
     for root, dirs, files in os.walk(dirName):
-    for name in files:
-        ipAddrDict = replaceAllIPAddr(os.path.join(root,name), ipAddrDict)
-    for name in dirs:
-        # Such recursion 
-        ipAddrDict = replaceAllIPAddrInDir(os.path.join(root, name), ipAddrDict)
-    return ipAddrDict
+        for name in files:
+            ipAddrDict = redactFile(os.path.join(root,name), ipAddrDict)
+        return ipAddrDict
