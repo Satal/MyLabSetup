@@ -1,4 +1,10 @@
 version: '3'
+
+networks:
+  atlassian_net:
+    name: atlassian_net
+    driver: bridge
+
 services:
   jira:
     image: atlassian/jira-software:latest
@@ -6,50 +12,58 @@ services:
     links:
       - database
     volumes:
-      - ./jira-data:/var/atlassian/jira
+      - jira-data:/var/atlassian/jira
     ports:
       - "8080:8080"
     environment:
       - 'JIRA_DATABASE_URL=postgresql://notroot@jira_postgresql/jiradb'
       - 'JIRA_DB_PASSWORD=P@ssw0rd1*'
+    networks:
+      - atlassian_net
 
-  confluence:
-    image: atlassian/confluence-server:latest
-    restart: always
-    links:
-      - jira
-      - database
-    volumes:
-      - ./confluence-data:/var/atlassian/confluence
-    ports:
-      - "8090:8090"
+  # confluence:
+  #   image: atlassian/confluence-server:latest
+  #   restart: always
+  #   links:
+  #     - jira
+  #     - database
+  #   volumes:
+  #     - confluence-data:/var/atlassian/confluence
+  #   ports:
+  #     - "8090:8090"
+  #   networks:
+  #     - atlassian_net
 
-  bitbucket:
-    image: atlassian/bitbucket-server:latest 
-    restart: always
-    links:
-      - database
-    volumes:
-      - ./bitbucket-data:/var/atlassian/application-data/bitbucket
-    ports:
-      - "7990:7990"
+  # bitbucket:
+  #   image: atlassian/bitbucket-server:latest 
+  #   restart: always
+  #   links:
+  #     - database
+  #   volumes:
+  #     - bitbucket-data:/var/atlassian/application-data/bitbucket
+  #   ports:
+  #     - "7990:7990"
+  #   networks:
+  #     - atlassian_net
 
-  servicedesk:
-    image: atlassian/jira-servicedesk:latest 
-    restart: always
-    links:
-      - database
-    volumes:
-      - ./servicedesk-data:/var/atlassian/jira
-    ports:
-      - "8081:8081"
+  # servicedesk:
+  #   image: atlassian/jira-servicedesk:latest 
+  #   restart: always
+  #   links:
+  #     - database
+  #   volumes:
+  #     - servicedesk-data:/var/atlassian/jira
+  #   ports:
+  #     - "8081:8081"
+  #   networks:
+  #     - atlassian_net
 
   database:
     image: postgres:latest
     restart: always
     container_name: jira_postgresql
     volumes:
-      - ./database-data:/var/lib/postgres/data
+      - database-data:/var/lib/postgres/data
     environment:
       - 'POSTGRES_DB=jiradb'
       - 'POSTGRES_USER=notroot'
@@ -57,9 +71,37 @@ services:
       - 'POSTGRES_ENCODING=UNICODE'
       - 'POSTGRES_COLLATE=C'
       - 'POSTGRES_COLLATE_TYPE=C'
+    networks:
+      - atlassian_net
 
 volumes:
-  jira-data:
+  jira-data: 
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/var/atlassian/jira-data'
   confluence-data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/var/atlassian/confluence-data'
   bitbucket-data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/var/atlassian/bitbucket-data'
+  servicedesk-data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/var/atlassian/servicedesk-data'
   database-data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/var/postgres-data'
