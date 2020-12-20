@@ -43,29 +43,41 @@ services:
     networks:
       - atlassian_net
 
-  # bitbucket:
-  #   image: atlassian/bitbucket-server:latest 
-  #   restart: always
-  #   links:
-  #     - database
-  #   volumes:
-  #     - bitbucket-data:/var/atlassian/application-data/bitbucket
-  #   ports:
-  #     - "7990:7990"
-  #   networks:
-  #     - atlassian_net
+  bitbucket:
+    image: atlassian/bitbucket-server:latest 
+    restart: always
+    links:
+      - database
+    volumes:
+      - bitbucket-data:/var/atlassian/application-data/bitbucket
+    ports:
+      - "7990:7990"
+    environment:
+      - 'ATL_JDBC_URL=jdbc:postgresql://jira_postgresql/bitbucket'
+      - 'ATL_JDBC_USER=notroot'
+      - 'ATL_JDBC_PASSWORD=Password1'
+      - 'ATL_DB_DRIVER=org.postgresql.Driver'
+      - 'ATL_DB_TYPE=postgres72'
+    networks:
+      - atlassian_net
 
-  # servicedesk:
-  #   image: atlassian/jira-servicedesk:latest 
-  #   restart: always
-  #   links:
-  #     - database
-  #   volumes:
-  #     - servicedesk-data:/var/atlassian/jira
-  #   ports:
-  #     - "8081:8081"
-  #   networks:
-  #     - atlassian_net
+  servicedesk:
+    image: atlassian/jira-servicedesk:latest 
+    restart: always
+    links:
+      - database
+    volumes:
+      - servicedesk-data:/var/atlassian/jira
+    ports:
+      - "8081:8081"
+    environment:
+      - 'ATL_JDBC_URL=jdbc:postgresql://jira_postgresql/jira_servicedesk'
+      - 'ATL_JDBC_USER=notroot'
+      - 'ATL_JDBC_PASSWORD=Password1'
+      - 'ATL_DB_DRIVER=org.postgresql.Driver'
+      - 'ATL_DB_TYPE=postgres72'
+    networks:
+      - atlassian_net
 
   database:
     image: postgres:latest
