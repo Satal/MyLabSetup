@@ -7,6 +7,7 @@ networks:
 
 services:
   jira:
+    container_name: jira
     image: atlassian/jira-software:latest
     restart: always
     links:
@@ -25,6 +26,7 @@ services:
       - atlassian_net
 
   # confluence:
+  #   container_name: confluence
   #   image: atlassian/confluence-server:latest
   #   restart: always
   #   links:
@@ -44,6 +46,7 @@ services:
   #     - atlassian_net
 
   bitbucket:
+    container_name: bitbucket
     image: atlassian/bitbucket-server:latest 
     restart: always
     links:
@@ -61,6 +64,7 @@ services:
       - atlassian_net
 
   # servicedesk:
+  #   container_name: service desk
   #   image: atlassian/jira-servicedesk:latest 
   #   restart: always
   #   links:
