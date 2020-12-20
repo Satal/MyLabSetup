@@ -24,18 +24,24 @@ services:
     networks:
       - atlassian_net
 
-  # confluence:
-  #   image: atlassian/confluence-server:latest
-  #   restart: always
-  #   links:
-  #     - jira
-  #     - database
-  #   volumes:
-  #     - confluence-data:/var/atlassian/confluence
-  #   ports:
-  #     - "8090:8090"
-  #   networks:
-  #     - atlassian_net
+  confluence:
+    image: atlassian/confluence-server:latest
+    restart: always
+    links:
+      - jira
+      - database
+    volumes:
+      - confluence-data:/var/atlassian/confluence
+    ports:
+      - "8090:8090"
+    environment:
+      - 'ATL_JDBC_URL=jdbc:postgresql://jira_postgresql/confluence'
+      - 'ATL_JDBC_USER=notroot'
+      - 'ATL_JDBC_PASSWORD=Password1'
+      - 'ATL_DB_DRIVER=org.postgresql.Driver'
+      - 'ATL_DB_TYPE=postgres72'
+    networks:
+      - atlassian_net
 
   # bitbucket:
   #   image: atlassian/bitbucket-server:latest 
@@ -72,7 +78,7 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - 'POSTGRES_DB=jiradb'
+      #- 'POSTGRES_DB=jiradb'
       - 'POSTGRES_USER=notroot'
       - 'POSTGRES_PASSWORD=Password1'
       - 'POSTGRES_ENCODING=UNICODE'
