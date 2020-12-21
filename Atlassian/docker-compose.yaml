@@ -6,38 +6,18 @@ networks:
     driver: bridge
 
 services:
-  jira:
-    container_name: jira
-    image: atlassian/jira-software:latest
-    restart: always
-    links:
-      - database
-    volumes:
-      - jira-data:/var/atlassian/jira
-    ports:
-      - "8080:8080"
-    environment:
-      - 'ATL_JDBC_URL=jdbc:postgresql://jira_postgresql/jira'
-      - 'ATL_JDBC_USER=notroot'
-      - 'ATL_JDBC_PASSWORD=Password1'
-      - 'ATL_DB_DRIVER=org.postgresql.Driver'
-      - 'ATL_DB_TYPE=postgres72'
-    networks:
-      - atlassian_net
-
-  # confluence:
-  #   container_name: confluence
-  #   image: atlassian/confluence-server:latest
+  # jira:
+  #   container_name: jira
+  #   image: atlassian/jira-software:latest
   #   restart: always
   #   links:
-  #     - jira
   #     - database
   #   volumes:
-  #     - confluence-data:/var/atlassian/confluence
+  #     - jira-data:/var/atlassian/jira
   #   ports:
-  #     - "8090:8090"
+  #     - "8080:8080"
   #   environment:
-  #     - 'ATL_JDBC_URL=jdbc:postgresql://jira_postgresql/confluence'
+  #     - 'ATL_JDBC_URL=jdbc:postgresql://jira_postgresql/jira'
   #     - 'ATL_JDBC_USER=notroot'
   #     - 'ATL_JDBC_PASSWORD=Password1'
   #     - 'ATL_DB_DRIVER=org.postgresql.Driver'
@@ -45,23 +25,43 @@ services:
   #   networks:
   #     - atlassian_net
 
-  bitbucket:
-    container_name: bitbucket
-    image: atlassian/bitbucket-server:latest 
+  confluence:
+    container_name: confluence
+    image: atlassian/confluence-server:latest
     restart: always
     links:
+      - jira
       - database
     volumes:
-      - bitbucket-data:/var/atlassian/application-data/bitbucket
+      - confluence-data:/var/atlassian/confluence
     ports:
-      - "7990:7990"
+      - "8090:8090"
     environment:
-      - 'JDBC_URL=jdbc:postgresql://jira_postgresql/bitbucket'
-      - 'JDBC_USER=notroot'
-      - 'JDBC_PASSWORD=Password1'
-      - 'JDBC_DRIVER=org.postgresql.Driver'
+      - 'ATL_JDBC_URL=jdbc:postgresql://jira_postgresql/confluence'
+      - 'ATL_JDBC_USER=notroot'
+      - 'ATL_JDBC_PASSWORD=Password1'
+      - 'ATL_DB_DRIVER=org.postgresql.Driver'
+      - 'ATL_DB_TYPE=postgres72'
     networks:
       - atlassian_net
+
+  # bitbucket:
+  #   container_name: bitbucket
+  #   image: atlassian/bitbucket-server:latest 
+  #   restart: always
+  #   links:
+  #     - database
+  #   volumes:
+  #     - bitbucket-data:/var/atlassian/application-data/bitbucket
+  #   ports:
+  #     - "7990:7990"
+  #   environment:
+  #     - 'JDBC_URL=jdbc:postgresql://jira_postgresql/bitbucket'
+  #     - 'JDBC_USER=notroot'
+  #     - 'JDBC_PASSWORD=Password1'
+  #     - 'JDBC_DRIVER=org.postgresql.Driver'
+  #   networks:
+  #     - atlassian_net
 
   # servicedesk:
   #   container_name: service desk
