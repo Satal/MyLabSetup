@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  itop:
+    container_name: itop
+    image: vbkunin/itop:2.7.1
+    restart: always
+    links:
+      - database
+    volumes:
+      - ext-data:/var/www/html/extensions
+    ports:
+      - "8080:8080"
+
+volumes:
+  ext-data: 
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/var/itop/extensions'
