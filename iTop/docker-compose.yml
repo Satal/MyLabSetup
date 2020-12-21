@@ -5,8 +5,6 @@ services:
     container_name: itop
     image: vbkunin/itop:2.7.1
     restart: always
-    links:
-      - database
     volumes:
       - ext-data:/var/www/html/extensions
     ports:
