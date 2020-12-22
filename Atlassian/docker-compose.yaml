@@ -63,7 +63,7 @@ services:
   #     - atlassian_net
 
   servicedesk:
-    container_name: service desk
+    container_name: servicedesk
     image: atlassian/jira-servicedesk:latest 
     restart: always
     links:
