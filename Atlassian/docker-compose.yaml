@@ -100,6 +100,26 @@ services:
     networks:
       - atlassian_net
 
+  nginx: 
+      container_name: nginx 
+      image: nginx:latest 
+      volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf 
+      depends_on: 
+      - jira 
+      - confluence 
+      - bitbucket
+      - servicedesk
+      ports: 
+      - "80:80" 
+      networks: 
+        default: 
+          aliases:
+          - jira.mylab.local
+          - confluence.mylab.local
+          - bitbucket.mylab.local
+          - servicedesk.mylab.local 
+
 volumes:
   jira-data: 
     driver: local
