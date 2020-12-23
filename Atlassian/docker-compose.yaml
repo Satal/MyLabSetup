@@ -4,6 +4,12 @@ networks:
   atlassian_net:
     name: atlassian_net
     driver: bridge
+  external_net: 
+    aliases:
+    - jira.mylab.local
+    # - confluence.mylab.local
+    # - bitbucket.mylab.local
+    # - servicedesk.mylab.local 
 
 services:
   jira:
@@ -101,24 +107,20 @@ services:
       - atlassian_net
 
   nginx: 
-      container_name: nginx 
-      image: nginx:latest 
-      volumes:
+    container_name: nginx 
+    image: nginx:latest 
+    volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf 
-      depends_on: 
+    depends_on: 
       - jira 
       # - confluence 
       # - bitbucket
       # - servicedesk
-      ports: 
+    ports: 
       - "80:80" 
-      networks: 
-        default: 
-          aliases:
-          - jira.mylab.local
-          # - confluence.mylab.local
-          # - bitbucket.mylab.local
-          # - servicedesk.mylab.local 
+    networks: 
+      - atlassian_net
+      - external_net
 
 volumes:
   jira-data: 
