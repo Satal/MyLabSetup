@@ -4,12 +4,6 @@ networks:
   atlassian_net:
     name: atlassian_net
     driver: bridge
-  external_net: 
-    aliases:
-    - jira.mylab.local
-    # - confluence.mylab.local
-    # - bitbucket.mylab.local
-    # - servicedesk.mylab.local 
 
 services:
   jira:
@@ -28,8 +22,8 @@ services:
       - 'ATL_JDBC_PASSWORD=Password1'
       - 'ATL_DB_DRIVER=org.postgresql.Driver'
       - 'ATL_DB_TYPE=postgres72'
-    networks:
-      - atlassian_net
+    # networks:
+    #   - atlassian_net
 
   # confluence:
   #   container_name: confluence
@@ -103,8 +97,8 @@ services:
       - 'POSTGRES_ENCODING=UNICODE'
       - 'POSTGRES_COLLATE=C'
       - 'POSTGRES_COLLATE_TYPE=C'
-    networks:
-      - atlassian_net
+    # networks:
+    #   - atlassian_net
 
   nginx: 
     container_name: nginx 
@@ -118,9 +112,13 @@ services:
       # - servicedesk
     ports: 
       - "80:80" 
-    networks: 
-      - atlassian_net
-      - external_net
+    networks:
+      default: 
+        aliases:
+        - jira.mylab.local
+        # - confluence.mylab.local
+        # - bitbucket.mylab.local
+        # - servicedesk.mylab.local 
 
 volumes:
   jira-data: 
