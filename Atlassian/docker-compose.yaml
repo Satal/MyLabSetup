@@ -1,10 +1,5 @@
 version: '3'
 
-networks:
-  atlassian_net:
-    name: atlassian_net
-    driver: bridge
-
 services:
   jira:
     container_name: jira
