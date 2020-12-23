@@ -19,8 +19,6 @@ services:
       - 'ATL_DB_TYPE=postgres72'
       - 'ATL_PROXY_NAME=jira.mylab.local'
       - 'ATL_PROXY_PORT=80'
-    # networks:
-    #   - atlassian_net
 
   # confluence:
   #   container_name: confluence
@@ -38,26 +36,26 @@ services:
   # #     - 'ATL_JDBC_PASSWORD=Password1'
   # #     - 'ATL_DB_DRIVER=org.postgresql.Driver'
   # #     - 'ATL_DB_TYPE=postgres72'
-  #   networks:
-  #     - atlassian_net
+      # - 'ATL_PROXY_NAME=confluence.mylab.local'
+      # - 'ATL_PROXY_PORT=80'
 
-  # bitbucket:
-  #   container_name: bitbucket
-  #   image: atlassian/bitbucket-server:latest 
-  #   restart: always
-  #   links:
-  #     - database
-  #   volumes:
-  #     - bitbucket-data:/var/atlassian/application-data/bitbucket
-  #   ports:
-  #     - "7990:7990"
-  #   environment:
-  #     - 'JDBC_URL=jdbc:postgresql://jira_postgresql/bitbucket'
-  #     - 'JDBC_USER=notroot'
-  #     - 'JDBC_PASSWORD=Password1'
-  #     - 'JDBC_DRIVER=org.postgresql.Driver'
-  #   networks:
-  #     - atlassian_net
+  bitbucket:
+    container_name: bitbucket
+    image: atlassian/bitbucket-server:latest 
+    restart: always
+    links:
+      - database
+    volumes:
+      - bitbucket-data:/var/atlassian/application-data/bitbucket
+    ports:
+      - "7990:7990"
+    environment:
+      - 'JDBC_URL=jdbc:postgresql://jira_postgresql/bitbucket'
+      - 'JDBC_USER=notroot'
+      - 'JDBC_PASSWORD=Password1'
+      - 'JDBC_DRIVER=org.postgresql.Driver'
+      - 'ATL_PROXY_NAME=bitbucket.mylab.local'
+      - 'ATL_PROXY_PORT=80'
 
   # servicedesk:
   #   container_name: servicedesk
@@ -75,8 +73,8 @@ services:
   #     - 'ATL_JDBC_PASSWORD=Password1'
   #     - 'ATL_DB_DRIVER=org.postgresql.Driver'
   #     - 'ATL_DB_TYPE=postgres72'
-  #   networks:
-  #     - atlassian_net
+      # - 'ATL_PROXY_NAME=servicedesk.mylab.local'
+      # - 'ATL_PROXY_PORT=80'
 
   database:
     image: postgres:latest
