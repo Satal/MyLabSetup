@@ -56,6 +56,6 @@ sudo nginx -t
 sudo systemctl restart nginx
 
 # Perform rsync
-reposync -p /data/repos/centos/8/x86_64/os/ --repo=BaseOS --download-metadata --newest-only
-reposync -p /data/repos/centos/8/x86_64/os/ --repo=AppStream --download-metadata --newest-only
+reposync -p /data/repos/centos/8/x86_64/os/ --repo=baseos --download-metadata --newest-only
+reposync -p /data/repos/centos/8/x86_64/os/ --repo=appstream --download-metadata --newest-only
 reposync -p /data/repos/centos/8/x86_64/os/ --repo=extras --download-metadata --newest-only
