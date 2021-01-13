@@ -20,7 +20,6 @@ chmod +x /usr/local/bin/docker-compose
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 # Configure firewall
-firewall-cmd --permanent --zone=trusted --change-interface=docker0
 firewall-cmd --add-masquerade --permanent
 firewall-cmd --reload
 
